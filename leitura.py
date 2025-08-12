@@ -2,6 +2,7 @@ import streamlit as st
 import folium
 from folium import plugins
 import geopandas as gpd
+from streamlit_folium import folium_static
 
 # Dicionário que relaciona países a título e autor de um livro
 country_books = {
@@ -12,8 +13,16 @@ country_books = {
     # Adicione mais países e dados conforme necessário
 }
 
+# URL direta para o GeoJSON
+geojson_url = "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json"
+
 # Carrega o GeoDataFrame dos países
-world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+try:
+    world = gpd.read_file(geojson_url)
+    st.write("GeoDataFrame carregado com sucesso!")
+except Exception as e:
+    st.error(f"Erro ao carregar o GeoJSON: {e}")
+    st.stop()
 
 # Configuração do Streamlit
 st.title("Mapa Interativo de Livros por País")
